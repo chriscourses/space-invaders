@@ -5,16 +5,24 @@
     justify-content: center;
     align-items: center;
     background-color: black;
+    font-family: sans-serif;
+    font-size: 14px;
   }
 </style>
 
-
-<div style="position: relative;">
+<div style="position: relative;" id="parentDiv">
   <p
-   style="position: absolute; z-index: 10; color: white; left: 10px; top: 10px; margin: 0; font-family: sans-serif; font-size: 14px;"
+    style="position: absolute; z-index: 10; color: white; left: 10px; top: 10px; margin: 0;"
   >
     <span>Score:</span> <span id="scoreEl">0</span>
   </p>
   <canvas></canvas>
 </div>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
+  integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
 <script src="./index.js"></script>

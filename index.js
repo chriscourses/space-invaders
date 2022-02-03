@@ -413,6 +413,25 @@ function animate() {
               console.log(score)
               scoreEl.innerHTML = score
 
+              // dynamic score labels
+              const scoreLabel = document.createElement('label')
+              scoreLabel.innerHTML = 100
+              scoreLabel.style.position = 'absolute'
+              scoreLabel.style.color = 'white'
+              scoreLabel.style.top = invader.position.y + 'px'
+              scoreLabel.style.left = invader.position.x + 'px'
+              scoreLabel.style.userSelect = 'none'
+              document.querySelector('#parentDiv').appendChild(scoreLabel)
+
+              gsap.to(scoreLabel, {
+                opacity: 0,
+                y: -30,
+                duration: 0.75,
+                onComplete: () => {
+                  document.querySelector('#parentDiv').removeChild(scoreLabel)
+                }
+              })
+
               createParticles({
                 object: invader,
                 fades: true

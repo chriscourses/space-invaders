@@ -229,7 +229,6 @@ class Grid {
         )
       }
     }
-    console.log(this.invaders)
   }
 
   update() {
@@ -239,7 +238,7 @@ class Grid {
     this.velocity.y = 0
 
     if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
-      this.velocity.x = -this.velocity.x
+      this.velocity.x = -this.velocity.x * 1.15
       this.velocity.y = 30
     }
   }
@@ -416,13 +415,39 @@ function createScoreLabel({ score = 100, object }) {
   })
 }
 
+function rectangularCollision({ rectangle1, rectangle2 }) {
+  return (
+    rectangle1.position.y + rectangle1.height >= rectangle2.position.y &&
+    rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+    rectangle1.position.x <= rectangle2.position.x + rectangle2.width
+  )
+}
+
+function endGame() {
+  console.log('you lose')
+
+  setTimeout(() => {
+    player.opacity = 0
+    game.over = true
+  }, 0)
+
+  setTimeout(() => {
+    game.active = false
+  }, 2000)
+
+  createParticles({
+    object: player,
+    color: 'white',
+    fades: true
+  })
+}
+
+let spawnBuffer = 500
 function animate() {
   if (!game.active) return
   requestAnimationFrame(animate)
   c.fillStyle = 'black'
   c.fillRect(0, 0, canvas.width, canvas.height)
-
-  console.log(powerUps)
 
   for (let i = powerUps.length - 1; i >= 0; i--) {
     const powerUp = powerUps[i]
@@ -500,29 +525,13 @@ function animate() {
 
     // projectile hits player
     if (
-      invaderProjectile.position.y + invaderProjectile.height >=
-        player.position.y &&
-      invaderProjectile.position.x + invaderProjectile.width >=
-        player.position.x &&
-      invaderProjectile.position.x <= player.position.x + player.width
-    ) {
-      console.log('you lose')
-
-      setTimeout(() => {
-        invaderProjectiles.splice(index, 1)
-        player.opacity = 0
-        game.over = true
-      }, 0)
-
-      setTimeout(() => {
-        game.active = false
-      }, 2000)
-
-      createParticles({
-        object: player,
-        color: 'white',
-        fades: true
+      rectangularCollision({
+        rectangle1: invaderProjectile,
+        rectangle2: player
       })
+    ) {
+      invaderProjectiles.splice(index, 1)
+      endGame()
     }
   })
 
@@ -588,7 +597,6 @@ function animate() {
 
     for (let i = grid.invaders.length - 1; i >= 0; i--) {
       const invader = grid.invaders[i]
-
       invader.update({ velocity: grid.velocity })
 
       for (let j = bombs.length - 1; j >= 0; j--) {
@@ -674,7 +682,17 @@ function animate() {
           }, 0)
         }
       })
-    }
+
+      // remove player if invaders touch it
+      if (
+        rectangularCollision({
+          rectangle1: invader,
+          rectangle2: player
+        }) &&
+        !game.over
+      )
+        endGame()
+    } // end looping over grid.invaders
   })
 
   if (keys.a.pressed && player.position.x >= 0) {
@@ -693,9 +711,13 @@ function animate() {
 
   // spawning enemies
   if (frames % randomInterval === 0) {
+    console.log(spawnBuffer)
+    console.log(randomInterval)
+    spawnBuffer = spawnBuffer < 0 ? 100 : spawnBuffer
     grids.push(new Grid())
-    randomInterval = Math.floor(Math.random() * 500 + 500)
+    randomInterval = Math.floor(Math.random() * 500 + spawnBuffer)
     frames = 0
+    spawnBuffer -= 100
   }
 
   if (keys.space.pressed && player.powerUp === 'MachineGun' && frames % 2 === 0)
@@ -723,16 +745,12 @@ addEventListener('keydown', ({ key }) => {
 
   switch (key) {
     case 'a':
-      // console.log('left')
-
       keys.a.pressed = true
       break
     case 'd':
-      // console.log('right')
       keys.d.pressed = true
       break
     case ' ':
-      // console.log('space')
       keys.space.pressed = true
 
       if (player.powerUp === 'MachineGun') return
@@ -750,7 +768,6 @@ addEventListener('keydown', ({ key }) => {
         })
       )
 
-      // console.log(projectiles)
       break
   }
 })
@@ -758,15 +775,12 @@ addEventListener('keydown', ({ key }) => {
 addEventListener('keyup', ({ key }) => {
   switch (key) {
     case 'a':
-      // console.log('left')
       keys.a.pressed = false
       break
     case 'd':
-      // console.log('right')
       keys.d.pressed = false
       break
     case ' ':
-      // console.log('space')
       keys.space.pressed = false
 
       break

@@ -12,6 +12,7 @@
 
 <div style="position: relative" id="parentDiv">
   <p
+    id="scoreContainer"
     style="
       position: absolute;
       z-index: 10;
@@ -19,17 +20,99 @@
       left: 10px;
       top: 10px;
       margin: 0;
+      display: none;
     "
   >
     <span>Score:</span> <span id="scoreEl">0</span>
   </p>
   <canvas></canvas>
-</div>
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
-  integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-></script>
+  <!-- background container -->
+  <div
+    id="startScreen"
+    style="
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: url('./img/startScreenBackground.png');
+      z-index: 20;
+      background-size: contain;
+      background-repeat: no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    "
+  >
+    <div style="text-align: center">
+      <h1 style="color: white">Space Invaders</h1>
 
-<script src="./index.js"></script>
+      <!-- button -->
+      <div
+        id="startButton"
+        style="cursor: pointer; position: relative; display: inline-block"
+      >
+        <img src="./img/button.png" alt="Start Button" />
+        <span
+          style="
+            position: absolute;
+            color: white;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            left: 50%;
+          "
+          >Start</span
+        >
+      </div>
+    </div>
+  </div>
+  <!-- restart screen -->
+  <!-- background container -->
+  <div
+    id="restartScreen"
+    style="
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: url('./img/startScreenBackground.png');
+      z-index: 20;
+      background-size: contain;
+      background-repeat: no-repeat;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    "
+  >
+    <div style="text-align: center">
+      <h1 style="color: white">Game Over</h1>
+
+      <!-- button -->
+      <div
+        id="restartButton"
+        style="cursor: pointer; position: relative; display: inline-block"
+      >
+        <img src="./img/button.png" alt="Restart Button" />
+        <span
+          style="
+            position: absolute;
+            color: white;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            left: 50%;
+          "
+          >Restart</span
+        >
+      </div>
+    </div>
+  </div>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
+    integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+
+  <script src="./index.js"></script>
+</div>

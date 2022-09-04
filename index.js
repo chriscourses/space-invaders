@@ -60,10 +60,12 @@ class Player {
   }
 
   update() {
-    if (this.image) {
-      this.draw()
-      this.position.x += this.velocity.x
-    }
+    if (!this.image) return
+
+    this.draw()
+    this.position.x += this.velocity.x
+
+    if (this.opacity !== 1) return
 
     this.frames++
     if (this.frames % 2 === 0) {
@@ -352,15 +354,15 @@ function randomBetween(min, max) {
   return Math.random() * (max - min) + min
 }
 
-const player = new Player()
-const projectiles = []
-const grids = []
-const invaderProjectiles = []
-const particles = []
-const bombs = []
-const powerUps = []
+let player = new Player()
+let projectiles = []
+let grids = []
+let invaderProjectiles = []
+let particles = []
+let bombs = []
+let powerUps = []
 
-const keys = {
+let keys = {
   a: {
     pressed: false
   },
@@ -380,21 +382,51 @@ let game = {
 }
 let score = 0
 
-for (let i = 0; i < 100; i++) {
-  particles.push(
-    new Particle({
-      position: {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height
-      },
-      velocity: {
-        x: 0,
-        y: 0.3
-      },
-      radius: Math.random() * 2,
-      color: 'white'
-    })
-  )
+function init() {
+  player = new Player()
+  projectiles = []
+  grids = []
+  invaderProjectiles = []
+  particles = []
+  bombs = []
+  powerUps = []
+
+  keys = {
+    a: {
+      pressed: false
+    },
+    d: {
+      pressed: false
+    },
+    space: {
+      pressed: false
+    }
+  }
+
+  frames = 0
+  randomInterval = Math.floor(Math.random() * 500 + 500)
+  game = {
+    over: false,
+    active: true
+  }
+  score = 0
+
+  for (let i = 0; i < 100; i++) {
+    particles.push(
+      new Particle({
+        position: {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height
+        },
+        velocity: {
+          x: 0,
+          y: 0.3
+        },
+        radius: Math.random() * 2,
+        color: 'white'
+      })
+    )
+  }
 }
 
 function createParticles({ object, color, fades }) {
@@ -448,13 +480,16 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
 function endGame() {
   console.log('you lose')
 
+  // Makes player disappear
   setTimeout(() => {
     player.opacity = 0
     game.over = true
   }, 0)
 
+  // stops game altogether
   setTimeout(() => {
     game.active = false
+    document.querySelector('#restartScreen').style.display = 'flex'
   }, 2000)
 
   createParticles({
@@ -524,6 +559,8 @@ function animate() {
   for (let i = player.particles.length - 1; i >= 0; i--) {
     const particle = player.particles[i]
     particle.update()
+
+    if (particle.opacity === 0) player.particles[i].splice(i, 1)
   }
 
   particles.forEach((particle, i) => {
@@ -766,7 +803,18 @@ function animate() {
   frames++
 }
 
-animate()
+document.querySelector('#startButton').addEventListener('click', () => {
+  document.querySelector('#startScreen').style.display = 'none'
+  document.querySelector('#scoreContainer').style.display = 'block'
+  init()
+  animate()
+})
+
+document.querySelector('#restartButton').addEventListener('click', () => {
+  document.querySelector('#restartScreen').style.display = 'none'
+  init()
+  animate()
+})
 
 addEventListener('keydown', ({ key }) => {
   if (game.over) return

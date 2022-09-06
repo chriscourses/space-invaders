@@ -207,6 +207,7 @@ class Invader {
   }
 
   shoot(invaderProjectiles) {
+    audio.enemyShoot.play()
     invaderProjectiles.push(
       new InvaderProjectile({
         position: {
@@ -312,6 +313,7 @@ class Bomb {
   }
 
   explode() {
+    audio.bomb.play()
     this.active = true
     this.velocity.x = 0
     this.velocity.y = 0
@@ -479,6 +481,7 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
 
 function endGame() {
   console.log('you lose')
+  audio.gameOver.play()
 
   // Makes player disappear
   setTimeout(() => {
@@ -635,6 +638,7 @@ function animate() {
         powerUps.splice(j, 1)
         player.powerUp = 'MachineGun'
         console.log('powerup started')
+        audio.bonus.play()
 
         setTimeout(() => {
           player.powerUp = null
@@ -728,6 +732,8 @@ function animate() {
                 fades: true
               })
 
+              // singular projectile hits an enemy
+              audio.explode.play()
               grid.invaders.splice(i, 1)
               projectiles.splice(j, 1)
 
@@ -785,7 +791,12 @@ function animate() {
     spawnBuffer -= 100
   }
 
-  if (keys.space.pressed && player.powerUp === 'MachineGun' && frames % 2 === 0)
+  if (
+    keys.space.pressed &&
+    player.powerUp === 'MachineGun' &&
+    frames % 2 === 0
+  ) {
+    if (frames % 6 === 0) audio.shoot.play()
     projectiles.push(
       new Projectile({
         position: {
@@ -799,11 +810,15 @@ function animate() {
         color: 'yellow'
       })
     )
+  }
 
   frames++
 }
 
 document.querySelector('#startButton').addEventListener('click', () => {
+  audio.backgroundMusic.play()
+  audio.start.play()
+
   document.querySelector('#startScreen').style.display = 'none'
   document.querySelector('#scoreContainer').style.display = 'block'
   init()
@@ -811,6 +826,7 @@ document.querySelector('#startButton').addEventListener('click', () => {
 })
 
 document.querySelector('#restartButton').addEventListener('click', () => {
+  audio.select.play()
   document.querySelector('#restartScreen').style.display = 'none'
   init()
   animate()
@@ -831,6 +847,7 @@ addEventListener('keydown', ({ key }) => {
 
       if (player.powerUp === 'MachineGun') return
 
+      audio.shoot.play()
       projectiles.push(
         new Projectile({
           position: {

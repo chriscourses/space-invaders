@@ -66,6 +66,8 @@ function init() {
     active: true
   }
   score = 0
+  document.querySelector('#finalScore').innerHTML = score
+  document.querySelector('#scoreEl').innerHTML = score
 
   for (let i = 0; i < 100; i++) {
     particles.push(
@@ -99,6 +101,7 @@ function endGame() {
   setTimeout(() => {
     game.active = false
     document.querySelector('#restartScreen').style.display = 'flex'
+    document.querySelector('#finalScore').innerHTML = score
   }, 2000)
 
   createParticles({

@@ -430,9 +430,16 @@ function animate() {
 }
 
 document.querySelector('#startButton').addEventListener('click', () => {
+  document.querySelector('#startInterface').style.display = 'none'
+
+  document.querySelector('#howToPlayInterface').style.display = 'block'
+})
+
+document.querySelector('#startGameButton').addEventListener('click', () => {
+  document.querySelector('#howToPlayInterface').style.display = 'none'
+
   audio.backgroundMusic.play()
   audio.start.play()
-
   document.querySelector('#startScreen').style.display = 'none'
   document.querySelector('#scoreContainer').style.display = 'block'
   init()

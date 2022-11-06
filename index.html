@@ -44,7 +44,7 @@
       justify-content: center;
     "
   >
-    <div style="text-align: center">
+    <div id="startInterface" style="text-align: center">
       <h1 style="color: white">Space Invaders</h1>
 
       <!-- button -->
@@ -62,6 +62,36 @@
             left: 50%;
           "
           >Start</span
+        >
+      </div>
+    </div>
+    <div id="howToPlayInterface" style="text-align: center; display: none">
+      <h1 style="color: white">How to Play</h1>
+      <div style="display: flex; justify-content: center; margin: 40px 0">
+        <img src="./img/controls.png" alt="" />
+      </div>
+
+      <!-- button -->
+      <div
+        id="startGameButton"
+        style="
+          cursor: pointer;
+          position: relative;
+          display: inline-block;
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        "
+      >
+        <img src="./img/button.png" alt="Start Button" />
+        <span
+          style="
+            position: absolute;
+            color: white;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            white-space: nowrap;
+          "
+          >Start Game</span
         >
       </div>
     </div>
